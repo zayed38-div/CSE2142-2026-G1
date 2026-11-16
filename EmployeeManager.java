@@ -5,6 +5,11 @@ import java.util.*;
 
 public class EmployeeManager {
     public static void main(String[] args) {
+
+    if (args.length != 1) {
+    System.out.println("Invalid number of arguments.");
+    return;
+    }
         // Check arguments
         if (args[0].equals("l")) {
             System.out.println("Loading data ...");
