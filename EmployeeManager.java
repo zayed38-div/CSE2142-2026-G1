@@ -86,22 +86,11 @@ public class EmployeeManager {
         } else if (args[0].contains("c")) {
             System.out.println("Loading data ...");
             try {
-                char[] characters = readFile().toCharArray();
-                boolean inWord = false;
-                int wordCount = 0;
+                String employeeData = readFile();
 
-                for (char currentCharacter : characters) {
-                    if (currentCharacter == ' ') {
-                        if (!inWord) {
-                            wordCount++;
-                            inWord = true;
-                        } else {
-                            inWord = false;
-                        }
-                    }
-                }
+                int wordCount = employeeData.split("\\s+").length;
 
-                System.out.println(wordCount + " word(s) found " + characters.length);
+                System.out.println(wordCount + " word(s) found " + employeeData.length());
             } catch (Exception exception) {
             }
             System.out.println("Data Loaded.");
