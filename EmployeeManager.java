@@ -60,19 +60,26 @@ public class EmployeeManager {
             }
             System.out.println("Data Loaded.");
 
-        } else if (args[0].contains("?")) {
+        } else if (args[0].startsWith("?")) {
             System.out.println("Loading data ...");
             try {
                 String[] employees = readFile().split(",");
                 boolean found = false;
 
-                for (int index = 0; index < employees.length && !found; index++) {
-                    if (employees[index].equals(args[0].substring(1))) {
+                for (String employee : employees) {
+                    if (employee.equals(args[0].substring(1))) {
                         System.out.println("Employee found!");
                         found = true;
+                        break;
                     }
                 }
+
+                if (!found) {
+                    System.out.println("Employee not found!");
+                }
+
             } catch (Exception exception) {
+                System.out.println("Error searching employee.");
             }
             System.out.println("Data Loaded.");
 
