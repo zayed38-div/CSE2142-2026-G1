@@ -2,79 +2,93 @@
 import java.io.*;
 import java.util.*;
 
+// Manages employee data and performs different employee operations.
 public class EmployeeManager {
 
-    public static String readFile() throws IOException {
+    // Reads employee data from the data file.
+    public static String readEmployeeData() throws IOException {
         BufferedReader reader = new BufferedReader(
                 new InputStreamReader(
                         new FileInputStream(Constants.FILE_PATH)));
 
-        String employeeLine = reader.readLine();
+        String employeeData = reader.readLine();
         reader.close();
 
-        return employeeLine;
+        return employeeData;
     }
 
-    public static void writeFile(String data, boolean append) throws IOException {
+    // Writes employee data to the file.
+    public static void writeEmployeeData(String employeeData, boolean append)
+            throws IOException {
         BufferedWriter writer = new BufferedWriter(
                 new FileWriter(Constants.FILE_PATH, append));
 
-        writer.write(data);
+        writer.write(employeeData);
         writer.close();
     }
 
     public static void main(String[] args) {
 
+        // Check whether exactly one command-line argument is provided.
         if (args.length != 1) {
             System.out.println("Invalid number of arguments.");
             return;
         }
 
-        if (args[0].equals("l")) {
+        String command = args[0];
+
+        // Display all employee names.
+        if (command.equals("l")) {
             System.out.println("Loading data ...");
             try {
-                for (String employee : readFile().split(",")) {
-                    System.out.println(employee);
+                for (String employeeName : readEmployeeData().split(",")) {
+                    System.out.println(employeeName);
                 }
             } catch (Exception exception) {
+                System.out.println("Error loading employee data.");
             }
             System.out.println("Data Loaded.");
 
-        } else if (args[0].equals("s")) {
+        // Display all employees and select one randomly.
+        } else if (command.equals("s")) {
             System.out.println("Loading data ...");
             try {
-                String[] employees = readFile().split(",");
+                String[] employeeNames = readEmployeeData().split(",");
 
-                System.out.println(String.join(",", employees));
+                System.out.println(String.join(",", employeeNames));
                 System.out.println(
-                        employees[new Random().nextInt(employees.length)]);
+                        employeeNames[new Random().nextInt(employeeNames.length)]);
             } catch (Exception exception) {
+                System.out.println("Error selecting employee.");
             }
             System.out.println("Data Loaded.");
 
-        } else if (args[0].contains("+")) {
+        // Add a new employee to the file.
+        } else if (command.contains("+")) {
             System.out.println("Loading data ...");
             try {
-                writeFile(", " + args[0].substring(1), true);
+                writeEmployeeData(", " + command.substring(1), true);
             } catch (Exception exception) {
+                System.out.println("Error adding employee.");
             }
             System.out.println("Data Loaded.");
 
-        } else if (args[0].startsWith("?")) {
+        // Search for an employee by name.
+        } else if (command.startsWith("?")) {
             System.out.println("Loading data ...");
             try {
-                String[] employees = readFile().split(",");
-                boolean found = false;
+                String[] employeeNames = readEmployeeData().split(",");
+                boolean employeeFound = false;
 
-                for (String employee : employees) {
-                    if (employee.equals(args[0].substring(1))) {
+                for (String employeeName : employeeNames) {
+                    if (employeeName.equals(command.substring(1))) {
                         System.out.println("Employee found!");
-                        found = true;
+                        employeeFound = true;
                         break;
                     }
                 }
 
-                if (!found) {
+                if (!employeeFound) {
                     System.out.println("Employee not found!");
                 }
 
@@ -83,47 +97,55 @@ public class EmployeeManager {
             }
             System.out.println("Data Loaded.");
 
-        } else if (args[0].contains("c")) {
+        // Count the words in employee data.
+        } else if (command.contains("c")) {
             System.out.println("Loading data ...");
             try {
-                String employeeData = readFile();
+                String employeeData = readEmployeeData();
 
                 int wordCount = employeeData.split("\\s+").length;
 
-                System.out.println(wordCount + " word(s) found " + employeeData.length());
+                System.out.println(
+                        wordCount + " word(s) found " + employeeData.length());
             } catch (Exception exception) {
+                System.out.println("Error counting words.");
             }
             System.out.println("Data Loaded.");
 
-        } else if (args[0].contains("u")) {
+        // Update an existing employee name.
+        } else if (command.contains("u")) {
             System.out.println("Loading data ...");
             try {
-                String[] employees = readFile().split(",");
+                String[] employeeNames = readEmployeeData().split(",");
 
-                for (int index = 0; index < employees.length; index++) {
-                    if (employees[index].equals(args[0].substring(1))) {
-                        employees[index] = "Updated";
+                for (int index = 0; index < employeeNames.length; index++) {
+                    if (employeeNames[index].equals(command.substring(1))) {
+                        employeeNames[index] = "Updated";
                     }
                 }
 
-                writeFile(String.join(",", employees), false);
+                writeEmployeeData(String.join(",", employeeNames), false);
             } catch (Exception exception) {
+                System.out.println("Error updating employee.");
             }
             System.out.println("Data Updated.");
 
-        } else if (args[0].contains("d")) {
+        // Delete an employee from the file.
+        } else if (command.contains("d")) {
             System.out.println("Loading data ...");
             try {
                 List<String> employeeList = new ArrayList<>(
-                        Arrays.asList(readFile().split(",")));
+                        Arrays.asList(readEmployeeData().split(",")));
 
-                employeeList.remove(args[0].substring(1));
+                employeeList.remove(command.substring(1));
 
-                writeFile(String.join(",", employeeList), false);
+                writeEmployeeData(String.join(",", employeeList), false);
             } catch (Exception exception) {
+                System.out.println("Error deleting employee.");
             }
             System.out.println("Data Deleted.");
 
+        // Handle unsupported commands.
         } else {
             System.out.println("Invalid command.");
         }
